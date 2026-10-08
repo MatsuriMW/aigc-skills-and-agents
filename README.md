@@ -20,6 +20,8 @@ character-sheet 角色设定板 ── 三视图 + 表情 + 细节的设定板 p
 生图 / 生视频（GPT Image、Nano Banana、Seedance、Kling…）：每个镜头 = 角色锁定 + 本场造型 + 妆发 + 道具 + 镜头描述
 ```
 
+> 角色设计 skill 有一个可以直接交付给别人用的独立版本：[MatsuriMW/ai-character-design-skill](https://github.com/MatsuriMW/ai-character-design-skill)（带安装脚本、README 和 claude.ai 用的 zip）。
+
 ## skills/
 
 | skill | 干嘛的 | 什么时候触发 |
