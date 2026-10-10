@@ -11,7 +11,7 @@
 juese-sheji 角色设计 ── 模糊感觉 → 名词和动作 → 服化道总表 + 锁定段，定下主造型
       │                  （独立仓库：ai-character-design-skill）
       ▼
-character-sheet 角色设定板 ── 三视图 + 表情 + 细节的设定板 prompt，锁定角色长相
+character-sheet 角色设定板 ── 三视图 + 不夸张的表情板 + 细节的设定板 prompt，锁定角色长相
       │                  （本仓库）
       ▼
 生图 / 生视频（GPT Image、Nano Banana、Seedance、Kling…）：每个镜头 = 角色锁定段 + 本场造型 + 镜头描述
@@ -21,7 +21,7 @@ character-sheet 角色设定板 ── 三视图 + 表情 + 细节的设定板 p
 
 | skill | 作用 | 推荐度 | 需要什么 |
 |---|---|---|---|
-| [character-sheet](skills/character-sheet)（角色设定板） | 把参考图、一段角色描述或角色设计的产出，做成锁定角色长相的设定板 prompt：4:3 横版，三视图、剪影、8 种表情、5 种微表情、头部结构、姿态、特写、服装细节、手部动作。先写一段逐项写实的「角色锁定段」，以后每个镜头都把它拼进 prompt。中英两版模板 | ★★★ 装上就能用 | 无；能生图的话可以直接出图 |
+| [character-sheet](skills/character-sheet)（角色设定板） | 把参考图、一段角色描述或角色设计的产出，做成锁定角色长相的设定板 prompt：4:3 横版，三视图、剪影、8 种表情、5 种微表情、头部结构、姿态、特写、服装细节、手部动作；可以拆出单独的表情板（3×3 面部研究）和状态板（同一个人的几种精神状态）。表情一律写成低强度的肌肉动作和不动的部位，专门防生图模型把表情做夸张、做出 AI 味。先写一段逐项写实的「角色锁定段」，以后每个镜头都把它拼进 prompt。中英两版模板 | ★★★ 装上就能用 | 无；能生图的话可以直接出图 |
 | [juese-sheji](https://github.com/MatsuriMW/ai-character-design-skill)（角色设计） | 把「一个轻佻的男性」「一个老年人」这种模糊的人物感觉，拆成脸、发型、配饰、服装、体态、生活痕迹、微表情、说话方式八个维度，每个维度写成模型能直接执行的名词和动作；另有 122 张人物原型卡、风格库、服化道和连戏表、群像拉开、出图后的漂移检查 | ★★★ 装上就能用 | 无 |
 
 角色设计 skill 内容比较多，单独放在 [ai-character-design-skill](https://github.com/MatsuriMW/ai-character-design-skill)，那里有一键安装脚本和 claude.ai 用的 zip。
