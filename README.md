@@ -1,11 +1,13 @@
 # AIGC Skills & Agents
 
-马自立（[@MatsuriMW](https://github.com/MatsuriMW)）做 AI 短片和给稿子配图时用的 [Claude](https://claude.com/claude-code) skill。这里放两个：
+马自立（[@MatsuriMW](https://github.com/MatsuriMW)）做 AI 短片和给稿子配图时用的 [Claude](https://claude.com/claude-code) skill 和工作区配置。这个仓库只放 AI 生图、生视频相关的；写作、笔记这些通用的在 [skills-agents-and-prompts](https://github.com/MatsuriMW/skills-agents-and-prompts)。
 
 - **角色设定板（character-sheet）**：把一个角色的长相锁死，之后每个镜头都照着它生成，解决「同一个角色每个镜头长得不一样」。
 - **古典式配图（gudianshi-skill）**：给文章和口播稿画解释图，版画的质感上插一个屏幕时代的元素，直接输出能改的 SVG。
+- **导演 skill（cinematic-director，改版）**：把剧本或一段文字变成分镜、调度和镜头清单。改自第三方 skill，加了杜琪峰的导演风格和一份中文视觉词汇表。
+- **aigc-workspace**：把上面这些串起来的工作区规则文件。
 
-角色设计（juese-sheji）原来也在这里，内容越做越多，已经拆到独立仓库 [ai-character-design-skill](https://github.com/MatsuriMW/ai-character-design-skill)。
+角色设计（juese-sheji）原来也在这里，内容越做越多，已经拆到独立仓库 [ai-character-design-skill](https://github.com/MatsuriMW/ai-character-design-skill)，这里不再留副本。
 
 ## Skills
 
@@ -13,6 +15,16 @@
 |---|---|---|---|
 | [character-sheet](skills/character-sheet)（角色设定板） | 把参考图、一段角色描述或角色设计的产出，做成锁定角色长相的设定板 prompt：4:3 横版，三视图、剪影、8 种表情、5 种微表情、头部结构、姿态、特写、服装细节、手部动作；可以拆出单独的表情板（3×3 面部研究）和状态板（同一个人的几种精神状态）。表情一律写成低强度的肌肉动作和不动的部位，专门防生图模型把表情做夸张、做出 AI 味。先写一段逐项写实的「角色锁定段」，以后每个镜头都把它拼进 prompt。中英两版模板 | ★★★ 装上就能用 | 无；能生图的话可以直接出图 |
 | [gudianshi-skill](skills/gudianshi-skill)（古典式配图） | 读完稿子，挑出最值得画的 3～6 个论点，每个画一张 1600×900 的 SVG：底下是版画排线和旧纸，上面只放一个只属于屏幕的东西（光标、加载圈、选中框、红点角标……），而且让它占住古典物件原本的位置。六种构图模板（对切、真假两条线、对照栏、被压扁、递减条、人物 + 对象 + 刺），数据图按同一个比例尺算坐标。只用一个强调色，不嵌位图，不写标题和观点句。[`examples/`](skills/gudianshi-skill/examples) 里有 7 张成品 | ★★★ 装上就能用 | 无；不需要生图模型 |
+
+| [cinematic-director](skills/cinematic-director)（导演 skill，改版） | 导演和预演：把剧本、一段文字或已有的图和视频素材，拆成潜台词、节拍表、导演阐述、调度走位、带覆盖镜头的镜头清单、关键帧和分镜 prompt、图生视频的运动 prompt、声音和对白方案、剪辑时间线、连戏手册和返修意见；可以套一位导演的风格。改自 [wuwangzhang1216/DirectorSKILL](https://github.com/wuwangzhang1216/DirectorSKILL)（MIT）：加了杜琪峰风格（`references/director_styles/21_johnnie_to.md`）和中文视觉词汇表（`references/visual-vocabulary-zh.md`） | ★★ 内容多，先看它的 README | 无；出图和出视频要有对应的平台 |
+
+## Agents
+
+| agent | 作用 | 推荐度 | 需要什么 |
+|---|---|---|---|
+| [aigc-workspace](agents/aigc-workspace) | AI 短片前期工作区的规则文件（`CLAUDE.md`）：目录怎么分（角色设定板、短片项目、参考资料）、从剧本到分镜、角色设计、角色设定板再到按模型写 prompt 的几个 skill 怎么分工、产出存在哪、版本怎么编号 | ★ 和我的目录约定绑得深，适合参考 | 上面的 skill；[角色设计](https://github.com/MatsuriMW/ai-character-design-skill) |
+
+工作区里还用到两个原样下载的第三方 skill，这里不收录，需要的话去原仓库装：按具体模型写生图 / 生视频 prompt 的 `image` 和 `video`，来自 [smixs/visual-skills](https://github.com/smixs/visual-skills)（CC-BY-4.0）。
 
 ## 角色设定板
 
@@ -35,7 +47,7 @@ character-sheet 角色设定板 ── 三视图 + 不夸张的表情板 + 细�
 
 有项目目录时，产出默认存进 `character-sheets/<角色>/`（prompt、参考图、生成结果）；没有就直接在对话里给。
 
-可以配合的其他 skill：上游分镜 / 导演用 [DirectorSKILL](https://github.com/wuwangzhang1216/DirectorSKILL)，下游按具体模型写 prompt 用 [visual-skills](https://github.com/smixs/visual-skills)。
+可以配合的其他 skill：上游分镜 / 导演用本仓库的 [cinematic-director](skills/cinematic-director)，下游按具体模型写 prompt 用 [visual-skills](https://github.com/smixs/visual-skills)。
 
 ## 古典式配图
 
@@ -71,4 +83,4 @@ character-sheet 角色设定板 ── 三视图 + 不夸张的表情板 + 细�
 ## 相关仓库
 
 - [ai-character-design-skill](https://github.com/MatsuriMW/ai-character-design-skill)：角色设计 skill，把「一个轻佻的男性」这种模糊感觉拆成八个维度的名词和动作，有一键安装脚本和 claude.ai 用的 zip
-- [skills-agents-and-prompts](https://github.com/MatsuriMW/skills-agents-and-prompts)：我其他的 skill、agent 和提示词（写作、笔记问答等），其中 `aigc-workspace` 是整套 AI 短片前期的工作区配置
+- [skills-agents-and-prompts](https://github.com/MatsuriMW/skills-agents-and-prompts)：我其他的 skill、agent 和提示词（写作、笔记问答、投资研究等）

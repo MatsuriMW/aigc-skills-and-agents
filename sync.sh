@@ -1,15 +1,34 @@
 #!/bin/zsh
-# character-sheet 的正本在 ~/claude/aigc（Claude Code 工作区）；古典式配图的公开版在 ~/claude/skills-agents-and-prompts。
-# 改完正本，跑这个把副本同步进仓库并推送。
-# 角色设计 juese-sheji 已经搬到独立仓库 ai-character-design-skill（在那边跑它自己的 sync.sh），这里不再同步。
+# AIGC 相关的 skill 和工作区配置的展示库。正本都在 skillshare 源（~/.config/skillshare/skills），这里只单向导出。
+# 准入标准：只放我自己做的或改过的；原样下载的 skill 不进，README 里给上游链接。
+# 单独建了仓库的 skill（角色设计 juese-sheji → ai-character-design-skill）不在这里留副本。
 # 用法：./sync.sh "改了什么"
 set -e
 R="${0:A:h}"
+SS="$HOME/.config/skillshare/skills"
 EX=(--exclude .DS_Store --exclude __pycache__)
+
+# 在 skillshare 源里按名字找 skill，不管它放在哪个分组
+ss_skill() {
+  local d=("$SS"/$1(/N) "$SS"/*/$1(/N))
+  [[ -n "$d[1]" ]] || { echo "skillshare 源里找不到 skill：$1" >&2; return 1 }
+  print -r -- "$d[1]"
+}
+
 mkdir -p "$R/skills"
-for s in character-sheet; do rsync -a --delete $EX "$HOME/claude/aigc/.claude/skills/$s/" "$R/skills/$s/"; done
-# 古典式配图：公开版（SKILL.md + examples/ 样图）在 skills-agents-and-prompts 仓库里维护，这里跟着它走
-rsync -a --delete $EX "$HOME/claude/skills-agents-and-prompts/skills/gudianshi-skill/" "$R/skills/gudianshi-skill/"
+# character-sheet 自制；cinematic-director 改自 wuwangzhang1216/DirectorSKILL（MIT）
+for s in character-sheet cinematic-director; do
+  src=$(ss_skill $s) || exit 1
+  rsync -a --delete $EX "$src/" "$R/skills/$s/"
+done
+# 古典式配图：SKILL.md 跟着正本走，examples/ 样图只在这个仓库里，同步时保留
+src=$(ss_skill gudianshi-skill) || exit 1
+rsync -a --delete $EX --exclude examples "$src/" "$R/skills/gudianshi-skill/"
+
+# aigc 工作区的规则文件
+mkdir -p "$R/agents/aigc-workspace"
+cp "$HOME/claude/aigc/CLAUDE.md" "$R/agents/aigc-workspace/CLAUDE.md"
+
 cd "$R"
 git add -A
 git diff --cached --quiet && { echo "没有改动"; exit 0; }
