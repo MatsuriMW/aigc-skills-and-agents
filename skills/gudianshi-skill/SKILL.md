@@ -25,6 +25,14 @@ description: 古典式skill。为口播视频、视频文稿、文章制作「�
 - 拿不到素材，或者环境里跑不了脚本（比如 claude.ai 的沙盒里没有图库），退回方向一，并告诉用户。
 - 同一篇稿子的一组图可以两个方向混着出，交付时每张标明是哪个方向。
 
+方向二做出来是这样的：
+
+![希罗多德胸像刻成版画线网，嘴里伸出一个输入框，红色光标后面是替他补全的灰条](https://cdn.jsdelivr.net/gh/MatsuriMW/aigc-skills-and-agents@f23f19f/skills/gudianshi-skill/references/collage-examples/01_%E6%B2%A1%E8%AF%B4%E5%87%BA%E5%8F%A3%E7%9A%84%E9%83%A8%E5%88%86.jpg)
+
+![对切：罗丹《握紧的左手》，左半边版画、右半边马赛克，光标点在一个红色像素上](https://cdn.jsdelivr.net/gh/MatsuriMW/aigc-skills-and-agents@f23f19f/skills/gudianshi-skill/references/collage-examples/02_%E5%90%8C%E4%B8%80%E5%8F%AA%E6%89%8B%E4%B8%A4%E7%A7%8D%E7%94%BB%E6%B3%95.jpg)
+
+![施恩告尔的铜版画《狮鹫》装在 SVG 画的尖拱窗里，头上套着八个控制点的选中框](https://cdn.jsdelivr.net/gh/MatsuriMW/aigc-skills-and-agents@f23f19f/skills/gudianshi-skill/references/collage-examples/03_%E7%8B%AE%E9%B9%AB%E8%A2%AB%E9%80%89%E4%B8%AD.jpg)
+
 下面第一到第七节两个方向共用。**做方向二之前先读 `references/collage.md`**：素材怎么挑、怎么处理、怎么和 SVG 接上，都在那里。
 
 ![A 对切：1179 年的尖拱墓碑与 2026 年的卡片 UI，同一枚硬币骑在分割线上](https://cdn.jsdelivr.net/gh/MatsuriMW/skills-agents-and-prompts@765d40a/skills/gudianshi-skill/examples/04_%E5%90%8C%E4%B8%80%E6%9E%9A%E7%A1%AC%E5%B8%81%E4%B8%A4%E5%A5%97%E5%88%A4%E5%86%B3.svg)

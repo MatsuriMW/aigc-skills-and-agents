@@ -13,8 +13,8 @@
 
 ## 二、素材从哪来
 
-1. **有 `eagle-assets` skill 就先用它**。它管的是用户 Eagle 库里的「拼贴素材」文件夹，全是 CC0 的馆藏图，注释里记了出处。`list` 找图，`export` 把原图拷进 `imgs/src/assets/raw/` 并写 `CREDITS.md`。库里缺的可以用它补。
-2. 没有 Eagle 时，直接从开放馆藏取：大都会艺术博物馆（看 `isPublicDomain`）、芝加哥艺术博物馆（`is_public_domain`）、克利夫兰艺术博物馆（`cc0=1`）。下载到 `imgs/src/assets/raw/`，自己在 `CREDITS.md` 里记作品名、作者、年代、馆藏、许可、页面。
+1. **环境里有 `eagle-assets` skill 就先用它**。它管的是 Eagle 素材库里一个专门放拼贴素材的文件夹，全是 CC0 的馆藏图，注释里记了出处。`list` 找图，`export` 把原图拷进 `imgs/src/assets/raw/` 并写 `CREDITS.md`。库里缺的可以用它补。
+2. 没有这个 skill 时，直接从开放馆藏取：大都会艺术博物馆（看 `isPublicDomain`）、芝加哥艺术博物馆（`is_public_domain`）、克利夫兰艺术博物馆（`cc0=1`）。下载到 `imgs/src/assets/raw/`，自己在 `CREDITS.md` 里记作品名、作者、年代、馆藏、许可、页面。
 3. 用户自己给的图，先问清楚来源和许可。
 
 只收公有领域或 CC0 的。别人的海报、摄影、插画、截图不能剪进来，哪怕它就在用户的素材库里：那些只能当排版参考。
