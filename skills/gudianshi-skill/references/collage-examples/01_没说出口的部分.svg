@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <!-- 排线周期 4、角度 45°，和 prep_asset.py 的线网一致 -->
+    <pattern id="h4" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1.5"/></pattern>
+    <pattern id="h4b" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1"/></pattern>
+    <radialGradient id="vig" cx="50%" cy="50%" r="62%">
+      <stop offset="60%" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#14110E" stop-opacity="0.5"/></radialGradient>
+    <!-- 纸片的硬投影：只位移，不模糊 -->
+    <filter id="drop" x="-10%" y="-10%" width="130%" height="130%">
+      <feOffset in="SourceAlpha" dx="9" dy="11" result="o"/>
+      <feFlood flood-color="#14110E" flood-opacity="0.3"/><feComposite in2="o" operator="in" result="s"/>
+      <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- 古典层：旧纸 + SVG 画的壁龛、台座和投影 -->
+  <rect width="1600" height="900" fill="#E8E2D4"/>
+  <path d="M150 800 V330 Q150 70 450 70 Q750 70 750 330 V800 Z" fill="url(#h4)" opacity="0.32"/>
+  <path d="M150 800 V330 Q150 70 450 70 Q750 70 750 330 V800" fill="none" stroke="#14110E" stroke-width="3"/>
+  <path d="M640 800 L1010 800 L900 690 L640 690 Z" fill="url(#h4)" opacity="0.6"/>
+  <rect x="0" y="800" width="1600" height="100" fill="url(#h4)" opacity="0.5"/>
+  <rect x="0" y="800" width="1600" height="100" fill="url(#h4b)" opacity="0.5"/>
+  <line x1="0" y1="800" x2="1600" y2="800" stroke="#14110E" stroke-width="4"/>
+
+  <!-- 拼贴素材：希罗多德胸像，线网处理 + 剪刀白边 -->
+  <g filter="url(#drop)" transform="rotate(-1.5 450 440)">
+    <image href="assets/bust.png" x="199" y="72" width="502" height="734"/>
+  </g>
+
+  <rect width="1600" height="900" fill="url(#vig)"/>
+  <image href="assets/paper.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice" opacity="0.55" style="mix-blend-mode:multiply"/>
+
+  <!-- 现代层（刺）：从嘴里伸出来的输入框，光标后面是替他补全的灰条 -->
+  <g transform="translate(6 68)">
+  <path d="M470 398 L560 362 L560 434 Z" fill="#EFEAE0" stroke="#14110E" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="556" y="330" width="720" height="136" rx="14" fill="#EFEAE0" stroke="#14110E" stroke-width="3"/>
+  <rect x="557" y="364" width="6" height="68" fill="#EFEAE0"/>
+  <rect x="596" y="368" width="6" height="60" fill="#B03A2E"/>
+  <rect x="622" y="374" width="210" height="20" rx="4" fill="#C4BEB0"/>
+  <rect x="846" y="374" width="130" height="20" rx="4" fill="#C4BEB0"/>
+  <rect x="622" y="406" width="330" height="20" rx="4" fill="#C4BEB0"/>
+  <rect x="1150" y="372" width="96" height="52" rx="8" fill="#14110E"/>
+  <text x="1198" y="408" text-anchor="middle" font-family="'Menlo','Courier New',monospace" font-size="26" fill="#EFEAE0">Tab</text>
+  </g>
+
+  <text x="1540" y="856" text-anchor="end" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#14110E" opacity="0.65">希罗多德胸像，罗马，公元 2 世纪 · 大都会艺术博物馆，公有领域</text>
+</svg>

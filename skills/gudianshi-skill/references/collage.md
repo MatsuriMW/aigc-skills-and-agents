@@ -1,0 +1,138 @@
+# 方向二：SVG + 拼贴素材
+
+把公有领域的老东西（大理石胸像、石膏手、铜版画、器物照）处理成墨色纸片，放进 SVG 画的环境里，再插一个 SVG 画的刺。三条总原则、色板、刺的选择、构图模板全部照 `SKILL.md`，这里只讲多出来的部分。
+
+## 一、素材在画面里的身份
+
+**素材属于古典层，刺仍然是纯 SVG。** 这一条定了，其余都好判断：
+
+- 素材只换掉方向一里「用剪影和排线画出来的那个主角」。台座、拱窗、墙、地面、投影、网格，还是用 SVG 画。
+- 素材进画面之前一律处理成墨色 `#14110E` 和纸色，不保留原色。色板还是只有一个强调色，红只给刺或关键数据。
+- 刺不用位图。光标、输入框、选中框、角标照旧用 SVG 画，纯色、硬边、不做旧。
+- 一张图里：主角素材 1 件，配角最多 2 件，纸纹 1 层。再多就成了素材展览，刺会被淹掉。
+
+## 二、素材从哪来
+
+1. **有 `eagle-assets` skill 就先用它**。它管的是用户 Eagle 库里的「拼贴素材」文件夹，全是 CC0 的馆藏图，注释里记了出处。`list` 找图，`export` 把原图拷进 `imgs/src/assets/raw/` 并写 `CREDITS.md`。库里缺的可以用它补。
+2. 没有 Eagle 时，直接从开放馆藏取：大都会艺术博物馆（看 `isPublicDomain`）、芝加哥艺术博物馆（`is_public_domain`）、克利夫兰艺术博物馆（`cc0=1`）。下载到 `imgs/src/assets/raw/`，自己在 `CREDITS.md` 里记作品名、作者、年代、馆藏、许可、页面。
+3. 用户自己给的图，先问清楚来源和许可。
+
+只收公有领域或 CC0 的。别人的海报、摄影、插画、截图不能剪进来，哪怕它就在用户的素材库里：那些只能当排版参考。
+
+挑图时看三件事：轮廓清不清楚（要抠的图，背景越干净越好）、明暗够不够（线网靠明暗刻出来，一片平光的图会糊成一块）、它在稿子里指什么（挑不出语义位置的素材只是装饰，不如不用）。动手之前用 Read 把原图打开看一眼。
+
+## 三、素材处理：`scripts/prep_asset.py`
+
+```bash
+uv run --with "rembg[cpu]" scripts/prep_asset.py <原图> -o imgs/src/assets/<名字>.png --height <在画面里的高度> [--tone …]
+```
+
+`--height` / `--width` 填它在 1600×900 画面里要占的尺寸。输出是 2 倍像素的 PNG，脚本最后一行打印 `<image>` 标签，宽高照抄。
+
+| `--tone` | 出来是什么 | 给什么素材用 |
+|---|---|---|
+| `engrave`（默认） | 照片刻成版画：亮部留白、中间调 45° 排线、暗部交叉排线，再勾一遍轮廓；带剪刀白边 | 雕像、石膏、器物照。最贴「古典层」的气质，优先用 |
+| `halftone` | 报纸网点 + 白边 | 想要更「剪报」、更现代一点的拼贴感时 |
+| `ink` | 纸变透明，只剩墨线，不抠图不加边 | 本来就是版画、素描、钢笔画的图。出来像直接印在底纸上 |
+| `duotone` | 连续调的墨色 + 白边 | 信封、票据、手写信这类整张当纸片的（配 `--cut none`） |
+| `pixel` | 马赛克色块，四档墨色，硬边 | 同一件素材的「屏幕版」，只在对切构图的现代那一半用 |
+| `texture` | 整幅纸纹，输出 JPG | 叠在古典层最上面，`mix-blend-mode:multiply` |
+
+其他参数：`--crop x0,y0,x1,y1`（先裁原图，比例 0–1；台座、底座残边用它裁掉）、`--flip`（让人物朝向刺）、`--edge`（白边宽度，0 不加）、`--gamma`（>1 压暗，<1 提亮；青铜这类深色素材用 0.7 左右）、`--period`（排线周期，默认 4）、`--cut grabcut`（不装 rembg 时的退路，纯色底的器物照够用）。
+
+**同一张图里所有素材用同一种 tone**（`pixel` 和 `texture` 除外）。线网和网点混着用，画面会像两本不同的书撕下来的。
+
+## 四、SVG 和素材怎么接上
+
+素材贴上去只是第一步，「融合」靠下面这几种手法。一张图挑一两种用，不要全上。
+
+**1. 排线同频。** `engrave` 的线网是周期 4、角度 45°。SVG 里画环境用的排线取同样的周期和角度，位图上的线和矢量的线看起来就是同一把刻刀刻的：
+
+```xml
+<pattern id="h4" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+  <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1.5"/></pattern>
+<pattern id="h4b" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+  <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1"/></pattern>
+```
+
+（方向一的 `h1` 周期是 6。和素材放在一起时改用 `h4`。）
+
+**2. SVG 给素材搭环境。** 胸像背后画一个排线的壁龛，脚下画台座和地面线，旁边画一块排线的投影（平行四边形，`opacity` 0.6）。素材有了站的地方，就不再是飘着的贴纸。
+
+**3. 硬投影。** 纸片的影子只位移、不模糊，和「不羽化」的规矩一致：
+
+```xml
+<filter id="drop" x="-10%" y="-10%" width="130%" height="130%">
+  <feOffset in="SourceAlpha" dx="9" dy="11" result="o"/>
+  <feFlood flood-color="#14110E" flood-opacity="0.3"/><feComposite in2="o" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<g filter="url(#drop)" transform="rotate(-1.5 450 440)"><image href="assets/bust.png" …/></g>
+```
+
+带白边的纸片顺手转 1–3°，像手摆上去的。`ink` 处理的素材是「印」在纸上的，不加投影、不旋转。
+
+**4. 用 SVG 的形状裁素材。** 把素材装进 SVG 画的拱窗、钱币的圆、卡片 UI 的框里：
+
+```xml
+<clipPath id="arch"><path d="M500 830 V380 Q500 150 800 60 Q1100 150 1100 380 V830 Z"/></clipPath>
+<g clip-path="url(#arch)"><image href="assets/griffin.png" …/></g>
+```
+
+`ink` 素材配这一手最自然：拱窗外是 SVG 的交叉排线，拱窗里是五百年前的真线条。
+
+**5. 一件素材，两种画法（对切构图 A 的拼贴版）。** 同一张原图处理两遍，一遍 `engrave --edge 0`，一遍 `pixel`，两张 PNG 尺寸相同，放在同一个位置，各用一个 `clipPath` 沿分割线取一半。左边是版画，右边是马赛克，物件骑在线上。这是方向二独有的画法，方向一要「两边画法完全一致」，这里反过来，让画法本身说出年代。
+
+**6. 刺打在素材的语义位置上。** 第二条总原则在这里更好用，因为素材自带「位置」：嘴（话从这里出来）、眼睛（注视）、手心（捧着）、指尖（指向）、额头（想）、胸口的铭文（名字）。输入框从嘴里伸出来，加载圈转在瞳孔里，选中框套住头，光标点在握紧的拳头上。先在原图上量出那个位置的坐标，再把刺对上去；渲染之后要回头核对，素材一换尺寸，坐标就全变了。
+
+## 五、图层顺序
+
+从下到上：
+
+1. 旧纸底色 `#E8E2D4`
+2. SVG 画的环境（壁龛、台座、地面、投影）
+3. 拼贴素材
+4. 暗角
+5. 纸纹（`texture`，`multiply`，`opacity` 0.5 左右）
+6. **刺**
+7. 说明文字
+
+纸纹必须在刺的下面。纸纹压到刺上，刺就被做旧了，两层的反差就没了。对切构图里，纸纹和暗角只盖古典那一半（给它们加 `clip-path`）。
+
+## 六、流程
+
+```bash
+# 1. 找素材、拷原图（有 eagle-assets 时）
+python3 <eagle-assets>/scripts/eagle_assets.py list -k bust
+python3 <eagle-assets>/scripts/eagle_assets.py export <id> --to imgs/src/assets/raw
+
+# 2. 处理成纸片
+uv run --with "rembg[cpu]" scripts/prep_asset.py imgs/src/assets/raw/bust.jpg -o imgs/src/assets/bust.png --height 700
+uv run scripts/prep_asset.py imgs/src/assets/raw/paper.jpg -o imgs/src/assets/paper.jpg --tone texture
+
+# 3. 写工作稿 imgs/src/01_xxx.svg，用 <image href="assets/bust.png" …/> 引素材
+
+# 4. 打包 + 渲染，然后打开 PNG 看
+python3 scripts/pack_svg.py imgs/src/01_xxx.svg      # → imgs/01_xxx.svg（位图内嵌）+ imgs/01_xxx.png（3200×1800）
+```
+
+`CREDITS.md` 留在 `imgs/src/assets/raw/`，没用上的素材行删掉。说明文字可以拿一行写素材是什么（`希罗多德胸像，罗马，公元 2 世纪 · 大都会艺术博物馆，公有领域`），这属于「交代图里的对象是什么」，算事实说明。
+
+## 七、容易踩的
+
+- **XML 注释里不能出现两个连着的减号。** 把 `--tone ink` 这样的命令写进 `<!-- -->`，整个 SVG 会解析失败，渲染出一张空图。注释里写「按 ink 处理」。
+- rembg 第一次跑会下载一个 176 MB 的抠图模型，要等一会儿；下不动就加 `--model silueta`（43 MB）或 `--cut grabcut`。
+- 抠图常把台座、底座带进来，白边上会多出几个小豁口。用 `--crop` 把原图底部裁掉再处理。
+- 重新处理素材后宽高会变（尤其是加了 `--crop` 之后），要按脚本新打印的宽高改 `<image>`，刺的坐标也跟着挪。
+- 工作稿用相对路径引 `assets/`，直接拿去用会丢图。交付的永远是 `pack_svg.py` 打包过的那份。
+- 素材的说明文字别压在素材或密排线上。渲染之后看一眼再定位置。
+- 没有 `uv` 的环境：`pip install pillow numpy opencv-python-headless`（抠图再加 `rembg[cpu]`），然后用 `python3` 直接跑脚本。
+
+## 八、样例
+
+`references/collage-examples/` 里是三张做过的图：工作稿 SVG（看代码用，素材没随附所以不能直接渲染）和对应的预览 JPG。
+
+| 文件 | 构图 | 素材和处理 | 融合手法 | 刺 |
+|---|---|---|---|---|
+| `01_没说出口的部分` | F 人物 + 对象 + 刺 | 希罗多德胸像，`engrave` + 白边 | 排线同频、SVG 壁龛和台面、硬投影 | 从嘴里伸出来的输入框：红色光标，后面是替他补全的灰条 |
+| `02_同一只手两种画法` | A 对切 | 罗丹《握紧的左手》，左 `engrave`、右 `pixel` | 一件素材两种画法，`clipPath` 各取一半 | 光标，点在一个红色像素上 |
+| `03_狮鹫被选中` | 古典物件 + 读数工具 | 施恩告尔铜版画《狮鹫》，`ink` | 拱形 `clipPath` 裁素材，拱外是 SVG 交叉排线 | 八个控制点的选中框 + 红色尺寸角标 |

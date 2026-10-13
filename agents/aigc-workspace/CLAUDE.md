@@ -26,11 +26,12 @@ AI 生成内容（生图 / 生视频 / 角色设定）相关任务的工作目�
 - 风格库同步：用户在主库改了风格页后，在 `.claude/skills/juese-sheji` 下跑 `python3 scripts/sync-styles.py ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/马自立/审美/风格`。
 - juese-sheji 有独立的公开仓库（交付给别人用的版本），本地这份是正本，改完在仓库目录跑 `./sync.sh`，见下面「仓库」。
 - 风格偏好：做视频优先用 mg-styles-15 的拼贴剪贴（`06-collage`），其次形变（`08-morph`）；配图优先用 gathered-scenes-zine 那组海报 skill；motion 动画效果从 vibe-motion 那批里找。
-- 大体积的第三方仓库放 `upstream/`，不要放 `references/`：`references/` 会被 `~/claude/skills-agents-and-prompts/sync.sh` 整个同步到公开仓库。
+- 拼贴用的通用素材在 Eagle 库「思想的记录」的「拼贴素材」文件夹：纸张与票据、手与指示、人物与雕像、动植物、天体与地图、器物与机械、纸纹与叠加纹理。馆藏图都是公有领域（CC0），每张的注释里记了作者、年代、馆藏和页面。找图、取图、补新素材都用 `eagle-assets` skill（脚本 `eagle_assets.py`：`list` 查、`export` 把原图拷进项目并记 `CREDITS.md`）。只收 CC0 或公有领域的。
+- 大体积的第三方仓库放 `upstream/`，`references/` 只放轻量的参考资料。
 - 生成内容按任务类型分目录存放，不要散落在根目录。
 - 同一角色的迭代放在同一目录下，用版本号区分。
 
 ## 仓库
 
 - `~/claude/ai-character-design-skill` → github.com/MatsuriMW/ai-character-design-skill：juese-sheji 的独立交付版（README、install.sh、MIT、Release 里有 claude.ai 用的 zip）。改完本地 skill 在那个目录跑 `./sync.sh "说明"`；推送后 GitHub Actions（`.github/workflows/release.yml`）自动发新版本：`juese-sheji/` 或 `package.py` 有改动就在上一个标签上 patch 加一（v0.1.1 → v0.1.2），提交说明**末尾**写 `#minor` / `#major` 升大版本；每版带 `juese-sheji.zip`（claude.ai 用）和 `juese-sheji-skillhub.zip`（SKILL.md 在根目录，SkillHub 用），Release 说明就是上一版以来的提交说明，所以 sync.sh 的说明要写成给别人看的，并带上对应的 Linear 卡号（例：`./sync.sh "加表情谱 MAT-184"`）：发版后 Actions 会在提到的卡下评论「已发布于 vX.Y.Z」，并在基线卡 MAT-96 记一条完整更新说明，在 Linear project「ai-character-design-skill」发一条 project 更新；每次推送还会把 project 介绍刷新成 README 的内容（所以别在 Linear 里手改 project 介绍）。juese-sheji 的 Linear 卡都建在这个 project，不进 AIGC；仓库配了 autolink，提交和 Release 里的 MAT-xx 会链到 Linear。本地 sync.sh 也会打一份到 `dist/`（别用 macOS 的 zip，中文文件名会乱码）
-- `~/claude/aigc-skills-and-agents` → github.com/MatsuriMW/aigc-skills-and-agents：AIGC skill 合集（现在只放 character-sheet；juese-sheji 只在上面的独立仓库维护），`./sync.sh`
+- `~/claude/aigc-skills-and-agents` → github.com/MatsuriMW/aigc-skills-and-agents：AIGC 相关的展示库，只放自己做的或改过的：character-sheet、古典式配图 gudianshi-skill（`examples/` 样图只在仓库里）、改过的 cinematic-director，以及这份 `CLAUDE.md`（`agents/aigc-workspace/`）。它的 `./sync.sh "说明"` 从 skillshare 源单向导出再推送。juese-sheji 只在上面的独立仓库维护，这里不留副本；原样下载的 `image`、`video` 不进展示库。写作、笔记这些通用的在 `~/claude/skills-agents-and-prompts`

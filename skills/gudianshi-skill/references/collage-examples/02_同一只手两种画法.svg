@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <pattern id="h4" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1.5"/></pattern>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#14110E" stroke-width="0.6" opacity="0.35"/></pattern>
+    <radialGradient id="vig" cx="0%" cy="50%" r="100%">
+      <stop offset="55%" stop-color="#14110E" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#14110E" stop-opacity="0"/></radialGradient>
+    <linearGradient id="vigL" x1="0" x2="1"><stop offset="0" stop-color="#14110E" stop-opacity="0.45"/><stop offset="0.6" stop-color="#14110E" stop-opacity="0"/></linearGradient>
+    <clipPath id="L"><rect x="0" y="0" width="800" height="900"/></clipPath>
+    <clipPath id="R"><rect x="800" y="0" width="800" height="900"/></clipPath>
+  </defs>
+
+  <!-- 左：古典层 -->
+  <rect width="800" height="900" fill="#E8E2D4"/>
+  <rect x="0" y="760" width="800" height="140" fill="url(#h4)" opacity="0.55"/>
+  <line x1="0" y1="760" x2="800" y2="760" stroke="#14110E" stroke-width="4"/>
+  <rect width="800" height="900" fill="url(#vigL)"/>
+  <image href="assets/paper.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice" opacity="0.55" style="mix-blend-mode:multiply" clip-path="url(#L)"/>
+  <!-- 右：现代层 -->
+  <rect x="800" width="800" height="900" fill="#EFEAE0"/>
+  <rect x="800" width="800" height="900" fill="url(#grid)"/>
+  <line x1="800" y1="760" x2="1600" y2="760" stroke="#14110E" stroke-width="2"/>
+
+  <!-- 同一张素材、同一个位置，两种处理，用 clipPath 沿分割线各取一半 -->
+  <image href="assets/fist.png" x="630" y="150" width="340" height="696" clip-path="url(#L)"/>
+  <image href="assets/fist_px.png" x="630" y="150" width="340" height="696" clip-path="url(#R)"/>
+  <rect x="868" y="402" width="16" height="16" fill="#B03A2E"/>
+
+  <line x1="800" y1="0" x2="800" y2="900" stroke="#14110E" stroke-width="2" stroke-dasharray="10 10"/>
+
+  <text x="90" y="170" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="96" fill="#14110E">1885</text>
+  <text x="1510" y="170" text-anchor="end" font-family="'Menlo','Courier New',monospace" font-size="96" fill="#14110E">2026</text>
+
+  <!-- 刺：光标 -->
+  <path transform="translate(884 418) scale(2.4)" d="M0 0 L0 34 L9 26 L15 40 L21 37 L15 24 L27 24 Z" fill="#14110E" stroke="#EFEAE0" stroke-width="1.6" stroke-linejoin="miter"/>
+
+  <text x="90" y="232" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#14110E" opacity="0.65">罗丹《握紧的左手》，约 1885 年塑</text>
+  <text x="90" y="268" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#14110E" opacity="0.65">大都会艺术博物馆，公有领域</text>
+</svg>

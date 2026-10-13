@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <pattern id="h4" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1.5"/></pattern>
+    <pattern id="h4b" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1"/></pattern>
+    <radialGradient id="vig" cx="50%" cy="50%" r="62%">
+      <stop offset="60%" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#14110E" stop-opacity="0.5"/></radialGradient>
+    <clipPath id="arch"><path d="M500 830 V380 Q500 150 800 60 Q1100 150 1100 380 V830 Z"/></clipPath>
+  </defs>
+  <rect width="1600" height="900" fill="#E8E2D4"/>
+  <!-- SVG 画的墙：尖拱之外全是交叉排线 -->
+  <path fill-rule="evenodd" d="M0 0H1600V900H0Z M500 830 V380 Q500 150 800 60 Q1100 150 1100 380 V830 Z" fill="url(#h4)" opacity="0.6"/>
+  <path fill-rule="evenodd" d="M0 0H1600V900H0Z M500 830 V380 Q500 150 800 60 Q1100 150 1100 380 V830 Z" fill="url(#h4b)" opacity="0.45"/>
+  <path d="M500 830 V380 Q500 150 800 60 Q1100 150 1100 380 V830 Z" fill="none" stroke="#14110E" stroke-width="5"/>
+  <!-- 素材：1480 年代的铜版画，按 ink 处理后只剩墨线，直接印在拱窗里的纸上；用拱形 clipPath 裁 -->
+  <g clip-path="url(#arch)">
+    <image href="assets/griffin.png" x="500" y="230" width="600" height="600"/>
+  </g>
+  <rect width="1600" height="900" fill="url(#vig)"/>
+  <image href="assets/paper.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice" opacity="0.55" style="mix-blend-mode:multiply"/>
+  <!-- 刺：八个控制点的选中框 + 尺寸角标 -->
+  <rect x="860" y="270" width="210" height="190" fill="none" stroke="#14110E" stroke-width="2.5"/>
+  <g fill="#EFEAE0" stroke="#14110E" stroke-width="2.5">
+    <rect x="852" y="262" width="16" height="16"/><rect x="957" y="262" width="16" height="16"/><rect x="1062" y="262" width="16" height="16"/>
+    <rect x="852" y="357" width="16" height="16"/><rect x="1062" y="357" width="16" height="16"/>
+    <rect x="852" y="452" width="16" height="16"/><rect x="957" y="452" width="16" height="16"/><rect x="1062" y="452" width="16" height="16"/>
+  </g>
+  <rect x="1086" y="452" width="150" height="40" fill="#B03A2E"/>
+  <text x="1161" y="481" text-anchor="middle" font-family="'Menlo','Courier New',monospace" font-size="24" fill="#EFEAE0">210 × 190</text>
+  <text x="60" y="820" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#EFEAE0">马丁·施恩告尔《狮鹫》，约 1480–90 年</text>
+  <text x="60" y="856" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#EFEAE0">克利夫兰艺术博物馆，CC0</text>
+</svg>
