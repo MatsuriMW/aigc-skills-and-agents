@@ -25,6 +25,10 @@ done
 src=$(ss_skill gudianshi-skill) || exit 1
 rsync -a --delete $EX --exclude examples "$src/" "$R/skills/gudianshi-skill/"
 
+# Eagle 音效：index.json 是我自己库里量出来的数，别人的库用不上，不导出
+src=$(ss_skill eagle-sfx) || exit 1
+rsync -a --delete $EX --exclude index.json "$src/" "$R/skills/eagle-sfx/"
+
 # aigc 工作区的规则文件
 mkdir -p "$R/agents/aigc-workspace"
 cp "$HOME/claude/aigc/CLAUDE.md" "$R/agents/aigc-workspace/CLAUDE.md"
