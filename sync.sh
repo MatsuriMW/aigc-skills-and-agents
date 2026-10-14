@@ -16,8 +16,9 @@ ss_skill() {
 }
 
 mkdir -p "$R/skills"
-# character-sheet 自制；cinematic-director 改自 wuwangzhang1216/DirectorSKILL（MIT）
-for s in character-sheet cinematic-director; do
+# character-sheet、minimax-tts、virgin-vs-chad 自制；cinematic-director 改自 wuwangzhang1216/DirectorSKILL（MIT）
+# virgin-vs-chad 的角色图不在 skill 目录里（出处和许可各不相同），导出的只有脚本和说明
+for s in character-sheet cinematic-director minimax-tts virgin-vs-chad; do
   src=$(ss_skill $s) || exit 1
   rsync -a --delete $EX "$src/" "$R/skills/$s/"
 done
