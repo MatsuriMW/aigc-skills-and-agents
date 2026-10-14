@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <!-- 美柔汀的环境用颗粒，不用排线 -->
+    <pattern id="gr" width="12" height="12" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="3" r="1.1" fill="#14110E"/><circle cx="8" cy="1.5" r="0.9" fill="#14110E"/>
+      <circle cx="5" cy="7" r="1.2" fill="#14110E"/><circle cx="10.5" cy="9" r="1" fill="#14110E"/>
+      <circle cx="1" cy="10.5" r="0.8" fill="#14110E"/><circle cx="7.5" cy="11" r="0.7" fill="#14110E"/></pattern>
+    <radialGradient id="vig" cx="50%" cy="50%" r="62%">
+      <stop offset="60%" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#14110E" stop-opacity="0.5"/></radialGradient>
+    <filter id="drop" x="-10%" y="-10%" width="130%" height="130%">
+      <feOffset in="SourceAlpha" dx="9" dy="11" result="o"/>
+      <feFlood flood-color="#14110E" flood-opacity="0.3"/><feComposite in2="o" operator="in" result="s"/>
+      <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- 古典层：旧纸 + SVG 画的画框（人物出框）和颗粒地面 -->
+  <rect width="1600" height="900" fill="#E8E2D4"/>
+  <rect x="860" y="60" width="680" height="740" fill="url(#gr)" opacity="0.6"/>
+  <rect x="860" y="60" width="680" height="740" fill="none" stroke="#14110E" stroke-width="5"/>
+  <rect x="844" y="44" width="712" height="772" fill="none" stroke="#14110E" stroke-width="2"/>
+  <rect x="0" y="800" width="1600" height="100" fill="url(#gr)" opacity="0.85"/>
+  <line x1="0" y1="800" x2="1600" y2="800" stroke="#14110E" stroke-width="4"/>
+
+  <!-- 拼贴素材：伦勃朗油画里剪下的亚里士多德和荷马胸像，按 mezzotint 处理 + 剪刀白边 -->
+  <g filter="url(#drop)" transform="rotate(-1 1170 450)">
+    <image href="assets/aristotle.png" x="780" y="80" width="773" height="734"/>
+  </g>
+
+  <rect width="1600" height="900" fill="url(#vig)"/>
+
+  <!-- 现代层（刺）：手搭在荷马头上，就是一次悬停；悬停提示框 + 红光标 -->
+  <path d="M836 268 L862 284 L836 300 Z" fill="#14110E"/>
+  <rect x="380" y="232" width="458" height="104" rx="10" fill="#14110E"/>
+  <text x="412" y="278" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="30" fill="#EFEAE0">荷马</text>
+  <text x="412" y="316" font-family="'Menlo','Courier New',monospace" font-size="22" fill="#C4BEB0">hover · 2,700 年</text>
+  <rect x="742" y="258" width="64" height="52" rx="8" fill="#B03A2E"/>
+  <text x="774" y="292" text-anchor="middle" font-family="'Menlo','Courier New',monospace" font-size="22" fill="#EFEAE0">i</text>
+  <path transform="translate(892 294) scale(1.5)" d="M0 0 L0 34 L9 26 L15 40 L21 37 L15 24 L27 24 Z" fill="#B03A2E" stroke="#EFEAE0" stroke-width="2.2" stroke-linejoin="round"/>
+
+  <text x="60" y="736" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#14110E" opacity="0.65">伦勃朗《亚里士多德与荷马胸像》，1653 年</text>
+  <text x="60" y="772" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#14110E" opacity="0.65">大都会艺术博物馆，公有领域</text>
+</svg>

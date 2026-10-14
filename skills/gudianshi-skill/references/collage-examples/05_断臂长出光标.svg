@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <!-- 排线周期 4、角度 45°，和 prep_asset.py 的线网一致 -->
+    <pattern id="h4" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1.5"/></pattern>
+    <pattern id="h4b" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#14110E" stroke-width="1"/></pattern>
+    <radialGradient id="vig" cx="50%" cy="50%" r="62%">
+      <stop offset="60%" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#14110E" stop-opacity="0.5"/></radialGradient>
+    <filter id="drop" x="-10%" y="-10%" width="130%" height="130%">
+      <feOffset in="SourceAlpha" dx="9" dy="11" result="o"/>
+      <feFlood flood-color="#14110E" flood-opacity="0.3"/><feComposite in2="o" operator="in" result="s"/>
+      <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- 古典层：旧纸 + SVG 画的壁龛、台座、地面 -->
+  <rect width="1600" height="900" fill="#E8E2D4"/>
+  <path d="M530 776 V330 Q530 70 800 40 Q1070 70 1070 330 V776 Z" fill="url(#h4)" opacity="0.32"/>
+  <path d="M530 776 V330 Q530 70 800 40 Q1070 70 1070 330 V776" fill="none" stroke="#14110E" stroke-width="3"/>
+  <rect x="610" y="776" width="340" height="84" fill="url(#h4)" opacity="0.7"/>
+  <rect x="610" y="776" width="340" height="84" fill="url(#h4b)" opacity="0.5"/>
+  <rect x="610" y="776" width="340" height="84" fill="none" stroke="#14110E" stroke-width="3"/>
+  <rect x="0" y="860" width="1600" height="40" fill="url(#h4)" opacity="0.5"/>
+  <line x1="0" y1="860" x2="1600" y2="860" stroke="#14110E" stroke-width="4"/>
+
+  <!-- 拼贴素材：罗马大理石老妇人像，engrave + 压暗，rembg 抠图 -->
+  <g filter="url(#drop)">
+    <image href="assets/oldwoman.png" x="600" y="50" width="403" height="734"/>
+  </g>
+
+  <rect width="1600" height="900" fill="url(#vig)"/>
+
+  <!-- 现代层（刺）：长在断臂的缺口上，虚线补出缺掉的前臂，末端一个红光标 + 撤销键 -->
+  <path d="M614 254 L440 336 Q424 344 432 360 Q440 374 456 366 L626 290" fill="none" stroke="#14110E" stroke-width="3" stroke-dasharray="12 8" stroke-linecap="round"/>
+  <path transform="translate(414 352) scale(1.5)" d="M0 0 L0 34 L9 26 L15 40 L21 37 L15 24 L27 24 Z" fill="#B03A2E" stroke="#EFEAE0" stroke-width="2.2" stroke-linejoin="round"/>
+  <rect x="300" y="420" width="140" height="56" rx="10" fill="#14110E"/>
+  <text x="370" y="457" text-anchor="middle" font-family="'Menlo','Courier New',monospace" font-size="26" fill="#EFEAE0">⌘ Z</text>
+
+  <text x="60" y="796" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#14110E" opacity="0.65">大理石老妇人像，罗马，公元 14–68 年</text>
+  <text x="60" y="832" font-family="'Songti SC','Source Han Serif SC','Noto Serif CJK SC',serif" font-size="24" fill="#14110E" opacity="0.65">大都会艺术博物馆，公有领域</text>
+</svg>

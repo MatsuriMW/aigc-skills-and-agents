@@ -12,8 +12,17 @@
   uv run prep_asset.py hand.jpg -o assets/hand_px.png --height 400 --tone pixel   # 同一物件的「屏幕版」：马赛克色块
   uv run prep_asset.py paper.jpg -o assets/paper.jpg --tone texture               # 纸纹，整幅叠在古典层上
 
+油画：满幅都是东西，先框一块、出网格图看坐标，再沿轮廓剪：
+  uv run prep_asset.py painting.jpg --crop .30,.08,.72,.95 --grid assets/grid.jpg                  # 出带 0–1 网格的预览，不处理
+  uv run prep_asset.py painting.jpg -o assets/saint.png --height 640 --crop .30,.08,.72,.95 \
+      --poly ".42,.02 .70,.05 .95,.40 .90,.98 .08,.98 .12,.35" --tone mezzotint                    # 剪刀剪出人物 + 美柔汀颗粒
+  uv run prep_asset.py painting.jpg -o assets/scene.png --width 560 --cut none --tone mezzotint     # 整幅当窗，装进 SVG 的框
+
 --height / --width 填它在 1600×900 画面里要占的尺寸（SVG 单位）。输出是 2 倍像素，
 脚本最后一行打印 <image> 标签，照抄宽高即可。
+
+--poly 的坐标是 --crop 之后那块图里的 0–1 比例（--flip 之前），和 --grid 图上的刻度一致。
+单用 --poly 就是剪刀剪；再加 --cut rembg / grabcut，就只在多边形里抠图，旁边的人和物不会被带进来。
 
 抠图默认用 rembg（没装就退回 grabcut）。要用 rembg：
   uv run --with "rembg[cpu]" prep_asset.py ...
@@ -79,6 +88,54 @@ def dot_screen(cov, period, angle):
     return np.clip((cov - T) / (1.6 / period) + 0.5, 0, 1)
 
 
+def grain_screen(cov, period, seed=0):
+    """美柔汀：没有方向的颗粒，靠疏密出明暗。油画在版画时代就是这样翻印的，柔和的过渡不会像线网那样被刻碎。"""
+    h, w = cov.shape
+    n = cv2.GaussianBlur(np.random.default_rng(seed).random((h, w), dtype=np.float32), (0, 0), max(0.6, period * 0.09))
+    # 模糊后的噪声挤在 0.5 附近，按名次摊回 0–1 的均匀分布，阈值才不偏灰
+    T = np.empty(h * w, np.float32)
+    T[np.argsort(n, axis=None)] = np.linspace(0, 1, h * w, dtype=np.float32)
+    return np.clip((cov - T.reshape(h, w)) / 0.18 + 0.5, 0, 1)
+
+
+def parse_poly(s):
+    pts = [tuple(float(v) for v in p.split(',')) for p in s.replace(';', ' ').split()]
+    if len(pts) < 3 or any(len(p) != 2 for p in pts):
+        sys.exit('--poly 要至少三个点，写成 "x,y x,y x,y"，0–1 的比例')
+    return np.array(pts, np.float32)
+
+
+def cut_poly(shape, pts, flip):
+    """剪刀路径：多边形内为 1。4 倍超采样再缩回，边是直的、不锯齿。"""
+    h, w = shape
+    p = pts.copy()
+    if flip:
+        p[:, 0] = 1 - p[:, 0]
+    ss = 4
+    m = np.zeros((h * ss, w * ss), np.uint8)
+    cv2.fillPoly(m, [np.round(p * [w * ss, h * ss]).astype(np.int32)], 255, lineType=cv2.LINE_AA)
+    return cv2.resize(m, (w, h), interpolation=cv2.INTER_AREA).astype(np.float32) / 255
+
+
+def grid_preview(rgb, path):
+    """在图上画 0.1 一格的网格和刻度，给写 --poly 时对照坐标用。"""
+    h, w = rgb.shape[:2]
+    s = 1400 / max(h, w)
+    im = cv2.resize(rgb, (round(w * s), round(h * s)), interpolation=cv2.INTER_AREA).copy()
+    h, w = im.shape[:2]
+    for i in range(1, 10):
+        t = 2 if i == 5 else 1
+        x, y = round(w * i / 10), round(h * i / 10)
+        cv2.line(im, (x, 0), (x, h), (255, 40, 40), t, cv2.LINE_AA)
+        cv2.line(im, (0, y), (w, y), (255, 40, 40), t, cv2.LINE_AA)
+        for txt, org in ((f'.{i}', (x + 3, 18)), (f'.{i}', (3, y - 4))):
+            cv2.putText(im, txt, org, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 3, cv2.LINE_AA)
+            cv2.putText(im, txt, org, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 0, 0), 1, cv2.LINE_AA)
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    Image.fromarray(im).save(path, quality=88)
+    print(f'{path}  {w}×{h}px  网格 0.1 一格（坐标是 --crop 之后、--flip 之前的比例）', file=sys.stderr)
+
+
 def scissor_border(alpha, r, seed=0):
     """沿轮廓外扩 r 像素，再把边折成直线段——剪刀剪出来的边是一段一段直的，不是圆滑的。"""
     rng = np.random.default_rng(seed)
@@ -101,15 +158,18 @@ def scissor_border(alpha, r, seed=0):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('src')
-    ap.add_argument('-o', '--out', required=True)
+    ap.add_argument('-o', '--out', help='输出路径（--grid 时不用）')
     ap.add_argument('--height', type=float, help='在画面里的高度（SVG 单位）')
     ap.add_argument('--width', type=float, help='在画面里的宽度（SVG 单位），和 --height 二选一')
     ap.add_argument('--cut', choices=['auto', 'rembg', 'grabcut', 'none'], default='auto',
                     help='auto：有 rembg 用 rembg，没有用 grabcut；none：不抠，整张当纸片')
     ap.add_argument('--model', default='u2net', help='rembg 的模型，下载慢可换 silueta / u2netp')
-    ap.add_argument('--tone', choices=['engrave', 'halftone', 'duotone', 'ink', 'pixel', 'texture'], default='engrave',
-                    help='engrave 版画线网；halftone 报纸网点；duotone 连续调墨色；ink 纸变透明只留墨线（给版画、素描）；'
-                         'pixel 马赛克色块（同一物件的「屏幕版」）；texture 整张纸纹，输出 JPG，叠在最上面用 multiply')
+    ap.add_argument('--poly', help='剪刀路径："x,y x,y …"，--crop 之后那块图里的 0–1 比例；从油画里剪人物、给雕像限定抠图范围')
+    ap.add_argument('--grid', metavar='PATH', help='只输出一张带 0.1 网格的预览图（--crop 之后），用来量 --poly 的坐标')
+    ap.add_argument('--tone', choices=['engrave', 'mezzotint', 'halftone', 'duotone', 'ink', 'pixel', 'texture'], default='engrave',
+                    help='engrave 版画线网；mezzotint 美柔汀颗粒（给油画）；halftone 报纸网点；duotone 连续调墨色；'
+                         'ink 纸变透明只留墨线（给版画、素描）；pixel 马赛克色块（同一物件的「屏幕版」）；'
+                         'texture 整张纸纹，输出 JPG，叠在最上面用 multiply')
     ap.add_argument('--block', type=float, default=14, help='pixel 的色块边长（SVG 单位）')
     ap.add_argument('--period', type=float, default=4, help='线网 / 网点的周期（SVG 单位），默认 4；SVG 里配套的排线用同周期同角度')
     ap.add_argument('--angle', type=float, default=45)
@@ -119,8 +179,11 @@ def main():
     ap.add_argument('--flip', action='store_true', help='左右镜像')
     ap.add_argument('--scale', type=float, default=2, help='输出像素是 SVG 单位的几倍')
     a = ap.parse_args()
-    if not (a.height or a.width) and a.tone != 'texture':
+    if not a.grid and not a.out:
+        ap.error('需要 -o')
+    if not a.grid and not (a.height or a.width) and a.tone != 'texture':
         ap.error('需要 --height 或 --width')
+    poly = parse_poly(a.poly) if a.poly else None
 
     im = Image.open(a.src)
     im.seek(0)
@@ -129,6 +192,9 @@ def main():
         x0, y0, x1, y1 = (float(v) for v in a.crop.split(','))
         H, W = rgb.shape[:2]
         rgb = rgb[int(y0 * H):int(y1 * H), int(x0 * W):int(x1 * W)]
+    if a.grid:
+        grid_preview(np.ascontiguousarray(rgb), a.grid)
+        return
     if a.flip:
         rgb = rgb[:, ::-1]
     rgb = np.ascontiguousarray(rgb)
@@ -152,8 +218,8 @@ def main():
         return
 
     cut = a.cut
-    if a.tone == 'ink' and cut == 'auto':
-        cut = 'none'
+    if cut == 'auto' and (poly is not None or a.tone == 'ink'):
+        cut = 'none'          # 有剪刀路径就只用剪刀；版画、素描不抠
     if cut == 'auto':
         try:
             import rembg  # noqa: F401
@@ -163,6 +229,8 @@ def main():
             print('没装 rembg，改用 grabcut（纯色底的器物照够用；人像、杂乱背景请加 --with "rembg[cpu]"）', file=sys.stderr)
     alpha = {'rembg': lambda: cut_rembg(rgb, a.model), 'grabcut': lambda: cut_grabcut(rgb),
              'none': lambda: np.ones(rgb.shape[:2], np.float32)}[cut]()
+    if poly is not None:
+        alpha = alpha * cut_poly(alpha.shape, poly, a.flip)    # 先限定范围，再清碎片，多边形里的主体才不会被旁边更大的一块挤掉
 
     if cut != 'none':
         # 清掉抠图留下的碎片（台座残边、背景上的小岛），只留够大的块
@@ -173,6 +241,7 @@ def main():
             keep = [i for i in range(1, n) if stats[i, cv2.CC_STAT_AREA] >= 0.04 * stats[1:, cv2.CC_STAT_AREA].max()]
             m = np.isin(lab, keep).astype(np.uint8)
         alpha = alpha * cv2.dilate(m, np.ones((5, 5), np.uint8))
+    if cut != 'none' or poly is not None:
         # 裁到主体外接框
         ys, xs = np.where(alpha > 0.1)
         if len(ys) == 0:
@@ -206,6 +275,23 @@ def main():
             s = 0.9 * a.scale
             dog = cv2.GaussianBlur(Lc, (0, 0), s * 2.2) - cv2.GaussianBlur(Lc, (0, 0), s)
             ink = np.maximum(ink, np.clip((dog - 0.045) / 0.03, 0, 1))                    # 轮廓线：五官、发卷、衣褶
+            base = PAPER
+        elif a.tone == 'mezzotint':
+            # 老油画满是龟裂纹和画布纹，直接上颗粒会变成雪花：先保边平滑抹掉它们，轮廓留着；
+            # 再用大半径反锐化拉局部反差（只加体积，不加噪点）；覆盖率压一下中间调，
+            # 暗部才是丝绒黑、亮部像刮刀刮出来的白，脸不会被糊成一片
+            L8 = (L * 255).astype(np.uint8)
+            for _ in range(2):
+                L8 = cv2.bilateralFilter(L8, 0, 28, period * 0.7)
+            Ls = L8.astype(np.float32) / 255
+            Lc = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(4, 4)).apply(L8).astype(np.float32) / 255
+            Lc = 0.5 * Ls + 0.5 * Lc
+            Lc = np.clip(Lc + 0.6 * (Lc - cv2.GaussianBlur(Lc, (0, 0), period * 3)), 0, 1)
+            cov = np.clip((0.97 - Lc) / 0.97, 0, 1) ** 1.35
+            ink = grain_screen(cov, period, seed=W * 7 + H)
+            s = 0.9 * a.scale
+            dog = cv2.GaussianBlur(Ls, (0, 0), s * 2.2) - cv2.GaussianBlur(Ls, (0, 0), s)
+            ink = np.maximum(ink, np.clip((dog - 0.035) / 0.03, 0, 1))                    # 轮廓线：眼睛、鼻梁、手指，颗粒留不住的靠它
             base = PAPER
         elif a.tone == 'pixel':
             # 缩成色块再放大，量化成四档墨色：硬边、纯色，属于现代层的画法
