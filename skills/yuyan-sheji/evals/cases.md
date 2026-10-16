@@ -49,4 +49,10 @@ AAVE 和方言角色的台词逐句过一遍：
 
 ## 7 变体穿帮（脚本）
 
-英国角色的台词跑 `python3 scripts/yuyan_tool.py variety <文件> --target uk --speaker <名字>`，穿帮为 0。放一句故意写错的（*my apartment*）确认脚本能抓到。
+每个英文角色按自己的变体扫：英国角色 `--target uk`，美国角色 `--target us`，**澳洲角色 `--target au`**（澳洲词和英式拼写都算对；按 uk 扫会把 *smoko*、*arvo* 这些该说的词报成穿帮）。
+
+```
+python3 scripts/yuyan_tool.py variety <文件> --target <uk|us|au> --speaker <名字>
+```
+
+- 过：穿帮为 0。放一句故意写错的（英国角色说 *my apartment*）确认脚本能抓到。
