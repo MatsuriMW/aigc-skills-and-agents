@@ -270,6 +270,8 @@ Tool adapters describe **capability classes** observed at the time of writing. A
 
 MIT — see [LICENSE](LICENSE). That file is unmodified MIT text with no appended terms, so the `license: MIT` declaration in `SKILL.md` resolves to exactly what the file grants.
 
+> **Modified version.** This copy adds `references/director_styles/21_johnnie_to.md` and `references/visual-vocabulary-zh.md` by 马自立 (MatsuriMW), licensed under CC BY-NC-SA 4.0. Everything else stays MIT. See [NOTICE.md](NOTICE.md).
+
 The MIT grant covers the skill files. The usage rule above is not a licence condition; it states what the style modules do and do not license. Copyright in any real film stays with its rights holders, and nothing here conveys an interest in it. That rule governs *how* you apply the directorial knowledge with respect to existing films, which is a separate concern from software licensing.
 
 ---

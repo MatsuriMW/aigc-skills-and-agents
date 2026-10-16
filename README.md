@@ -5,9 +5,11 @@
 - **角色设定板（character-sheet）**：把一个角色的长相锁死，之后每个镜头都照着它生成，解决「同一个角色每个镜头长得不一样」。
 - **古典式配图（gudianshi-skill）**：给文章和口播稿画解释图，版画的质感上插一个屏幕时代的元素。两种做法：全部用 SVG 画，或者把博物馆公开的雕像、油画、版画剪成纸片，和 SVG 拼在一起。
 - **导演 skill（cinematic-director，改版）**：把剧本或一段文字变成分镜、调度和镜头清单。改自第三方 skill，加了杜琪峰的导演风格和一份中文视觉词汇表。
+- **Eagle 拼贴素材（eagle-assets）**：从 Eagle 里一个放公有领域素材的文件夹（胸像、石膏手、版画、旧纸、颗粒纹理）里找图、拷进工程，顺手把出处和许可写进 `CREDITS.md`。
 - **Eagle 音效（eagle-sfx）**：做片子时从 [Eagle](https://eagle.cool) 素材库的音效包里挑转场声、重击和拟音，量出每个音效最响的一下在第几秒，对在剪辑点上。
 - **MiniMax 配音（minimax-tts）**：用 MiniMax 的 speech-2.8-hd 把口播稿配成音频，整篇按段合成、接成一条音轨、出字幕和每段的时长表，改稿后只重新合成改过的段。
 - **欧美梗图（virgin-vs-chad）**：做 Virgin vs Chad 对比图、Yes Chad 回怼图这类简陋低幼风的配图，角色用经典梗图的原图，字和线用 SVG。
+- **语言设计（yuyan-sheji）**：给角色建一份「语言档案」，按档案写台词、查台词，让律师、修理工、英国老钱、东北老板娘一开口就各是各的人，不再说同一种 AI 客服腔。
 - **aigc-workspace**：把上面这些串起来的工作区规则文件。
 
 角色设计（juese-sheji）原来也在这里，内容越做越多，已经拆到独立仓库 [ai-character-design-skill](https://github.com/MatsuriMW/ai-character-design-skill)，这里不再留副本。
@@ -19,9 +21,11 @@
 | [character-sheet](skills/character-sheet)（角色设定板） | 把参考图、一段角色描述或角色设计的产出，做成锁定角色长相的设定板 prompt：4:3 横版，三视图、剪影、8 种表情、5 种微表情、头部结构、姿态、特写、服装细节、手部动作；可以拆出单独的表情板（3×3 面部研究）和状态板（同一个人的几种精神状态）。表情一律写成低强度的肌肉动作和不动的部位，专门防生图模型把表情做夸张、做出 AI 味。先写一段逐项写实的「角色锁定段」，以后每个镜头都把它拼进 prompt。中英两版模板 | ★★★ 装上就能用 | 无；能生图的话可以直接出图 |
 | [gudianshi-skill](skills/gudianshi-skill)（古典式配图） | 读完稿子，挑出最值得画的 3～6 个论点，每个画一张 1600×900 的 SVG：底下是版画排线和旧纸，上面只放一个只属于屏幕的东西（光标、加载圈、选中框、红点角标……），而且让它占住古典物件原本的位置。六种构图模板（对切、真假两条线、对照栏、被压扁、递减条、人物 + 对象 + 刺），数据图按同一个比例尺算坐标。只用一个强调色，不写标题和观点句。两个方向：纯 SVG（[`examples/`](skills/gudianshi-skill/examples) 里有 7 张成品），和 SVG + 拼贴素材（公有领域的雕像、浮雕、版画、器物照刻成版画线网的纸片，老油画沿轮廓剪下人和物、处理成美柔汀颗粒，[5 张成品](skills/gudianshi-skill/references/collage-examples)） | ★★★ 纯 SVG 装上就能用；★★ 拼贴要本机能跑脚本 | 纯 SVG：无。拼贴：Python（推荐用 [uv](https://docs.astral.sh/uv/)）和 Chrome；都不需要生图模型 |
 | [cinematic-director](skills/cinematic-director)（导演 skill，改版） | 导演和预演：把剧本、一段文字或已有的图和视频素材，拆成潜台词、节拍表、导演阐述、调度走位、带覆盖镜头的镜头清单、关键帧和分镜 prompt、图生视频的运动 prompt、声音和对白方案、剪辑时间线、连戏手册和返修意见；可以套一位导演的风格。改自 [wuwangzhang1216/DirectorSKILL](https://github.com/wuwangzhang1216/DirectorSKILL)（MIT）：加了杜琪峰风格（`references/director_styles/21_johnnie_to.md`）和中文视觉词汇表（`references/visual-vocabulary-zh.md`） | ★★ 内容多，先看它的 README | 无；出图和出视频要有对应的平台 |
+| [eagle-assets](skills/eagle-assets)（Eagle 拼贴素材） | 做拼贴、撕纸风格的视频和海报时，从 Eagle 的「拼贴素材」文件夹里找图：按子文件夹或关键词列（查名字、注释、标签），`export` 把原图拷进项目目录，并在 `CREDITS.md` 里追加作者、年代、馆藏、许可和原页面。只收公有领域（CC0）素材，公开视频能直接用；也负责往这个文件夹里补新素材 | ★ 要先在 Eagle 里攒一个自己的素材文件夹，适合参考着改 | Eagle（开着）、Python 3（只用标准库）。仓库里不带任何素材图 |
 | [eagle-sfx](skills/eagle-sfx)（Eagle 音效） | 从 Eagle 里的一整包音效（我的是一万四千多个、三百多个文件夹）里给视频挑音效：看文件夹树，按文件夹、关键词、时长筛，名字和文件夹名一起搜，支持「键盘 OR 打字」和「脚步 -雪」这样的写法。用 ffmpeg 量出每个音效最响的一下在第几秒、听得见的那一段有多长，分成打击、掠过、上升三种形状；导出时把文件拷进工程，并写一份记着这些数的 `sfx.json`，照着它就能把峰值钉在目标帧上。量过的数会记下来，文件在 iCloud 上没下载的会标出来、用到时才下载。对 Eagle 只读 | ★ 和我的音效库绑得深，适合参考着改 | Eagle（开着）、Python 3、ffmpeg；Eagle 里要有一个放音效的文件夹。仓库里不带任何音效文件 |
 | [minimax-tts](skills/minimax-tts)（MiniMax 配音） | 给视频配音：念一句，或者把整篇稿子按空行分段合成，标题、引用、表格、`【画面：…】` 这类标注自动跳过，`--only` 只念某一章。产出每段一个音频、一份记着每段时长和起点的 `manifest.json`（剪辑和 Remotion 对时间用），可选接成整条音轨、出对齐的 SRT 字幕。改稿后重跑，没变的段沿用上次的文件、不重复花钱。另有查音色、复刻自己的声音、合成前估价。SKILL.md 里写了停顿、语气词、多音字怎么标，让它念得像人 | ★★ 有密钥就能用；字幕结构和复刻是照官方文档写的，还没用真密钥跑过 | Python 3（只用标准库）、MiniMax 开放平台的接口密钥（读环境变量或 macOS 钥匙串）；接整条音轨要 ffmpeg |
 | [virgin-vs-chad](skills/virgin-vs-chad)（欧美梗图） | 四种格式：Virgin vs Chad 对比（左右两个角色各一圈标注、底下一句结论）、Yes Chad 回怼（一方说一大段，Chad 只回「Yes.」）、单角色标注、Impact 上下字。写一份 JSON 描述，脚本把标题、标注、指引线写进 SVG（中文不乱码、每条标注能单独改），用 Chrome 渲染成 PNG。SKILL.md 里写了哪个角色适合表达什么、标注怎么写才好笑 | ★ 角色图要自己准备，适合参考着改 | Python 3、Chrome、ImageMagick；Eagle 里一个放梗图角色原图的文件夹。仓库里不带角色图 |
+| [yuyan-sheji](skills/yuyan-sheji)（语言设计） | 从说话习惯塑造角色：用出身阶级和现在的阶级、国别地区、年龄、教育、职业推出这个人怎么说话，拆成十个能逐项检查的维度：口音和英式 / 美式 / 澳洲用词、黑人英语（AAVE）的语法规则、律师腔、京味儿和东北话、随对象切换语体、用词水平和 U / non-U、夹法语和拉丁语（吃饭前的 *Bon appétit*、举杯的 *Santé*，也分阶层）、句子复杂度、口头禅（每个都有频率上限）、用典、语用、情绪失控时往哪个方向崩。英国角色要过词表、语法、语用、阶层四关，附《吸血鬼日记》Klaus 和《路西法》Lucifer 的拆解。四个模式：从样本建档、从人设建档（接[角色设计](https://github.com/MatsuriMW/ai-character-design-skill)）、按档案写或改台词、逐句检查并回写档案。带五个反差大的示例角色、七个验收用例和盲测题，脚本能统计台词特征、抓英美用词穿帮 | ★★★ 装上就能用 | 无；脚本要 Python 3（只用标准库） |
 
 ## Agents
 
@@ -179,6 +183,17 @@ SKILL.md 里还有一张表，写的是画面上的哪种动作配哪种声音�
 
 - 全局用：`~/.claude/skills/`
 - 只在某个项目里用：`<项目>/.claude/skills/`
+
+## 许可
+
+我自己写的 skill（character-sheet、古典式配图、eagle-assets、eagle-sfx、minimax-tts、virgin-vs-chad、语言设计）和 aigc-workspace 的规则文件按 [CC BY-NC-SA 4.0](LICENSE)（署名-非商业性使用-相同方式共享）发布，每个 skill 目录里的 `LICENSE.md` 有中文说明：
+
+- 可以免费用、转载、改编，要写明原作者「马自立（MatsuriMW）」和出处链接，改编后的版本用同一个协议发布。
+- 不能拿 skill 本身去卖：付费下载、打包进付费课程或资料包、在付费 skill 市场转售都不行。
+- 用它们做出来的图、视频、配音、文案归你自己，不受这个协议限制。
+- 想商用，或者拿不准算不算商用，联系作者。
+
+例外：cinematic-director 改自 [wuwangzhang1216/DirectorSKILL](https://github.com/wuwangzhang1216/DirectorSKILL)，原作的文件仍按 MIT，只有我加的杜琪峰风格和中文视觉词汇表两份按 CC BY-NC-SA 4.0，见它目录里的 `NOTICE.md`。拼贴样图里的公有领域素材仍是公有领域，出处见各自的 `CREDITS.md`。改协议之前已经推送的提交仍按原来的条件。
 
 ## 相关仓库
 

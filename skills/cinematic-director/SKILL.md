@@ -13,7 +13,7 @@ description: >-
   Park Chan-wook, Malick, Michael Mann, Coen Brothers, Johnnie To. Use for shot planning, blocking, staging,
   camera movement, visual continuity, storyboard and keyframe design, prompt repair, "in the style of
   X" direction, and any AI video workflow.
-license: MIT
+license: MIT AND CC-BY-NC-SA-4.0
 metadata:
   version: "2.1.0"
   author: "wangzhang-wu"

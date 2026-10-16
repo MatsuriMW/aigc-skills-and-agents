@@ -1,6 +1,7 @@
 ---
 name: virgin-vs-chad
 description: 做欧美梗图风格的配图：Virgin vs Chad 对比图（两个角色、各一圈标注）、Yes Chad 回怼图（一方说一大段，Chad 只回「Yes.」「对。」）、单角色标注图（「The 27 岁的 Doomer」那种）、Impact 上下字。角色用真的梗图角色（Wojak、Soyjak、Yes Chad、Stacy、Becky、Doomer、NPC、Brainlet、GigaChad 等，来自用户 Eagle 的「梗图角色」文件夹），标题、标注、指引线、Impact 字用 SVG 写，出 SVG 和 PNG。用户说「Virgin vs Chad」「chad 那种图」「做个对比梗图」「wojak」「soyjak」「Yes Chad」「梗图配图」「meme 图」「Impact 字」「简陋低幼风」「欧美梗图」，或者要给文章、口播、视频做一张讽刺对比的配图时使用。要动图、视频梗素材时去 Eagle 的「梗图角色」文件夹找，不用这个 skill 出图。
+license: CC-BY-NC-SA-4.0
 ---
 
 # Virgin vs Chad 梗图

@@ -16,9 +16,9 @@ ss_skill() {
 }
 
 mkdir -p "$R/skills"
-# character-sheet、minimax-tts、virgin-vs-chad 自制；cinematic-director 改自 wuwangzhang1216/DirectorSKILL（MIT）
+# character-sheet、minimax-tts、virgin-vs-chad、yuyan-sheji、eagle-assets 自制；eagle-assets 只导出脚本和说明，素材图在我的 Eagle 库里，不进仓库；cinematic-director 改自 wuwangzhang1216/DirectorSKILL（MIT）
 # virgin-vs-chad 的角色图不在 skill 目录里（出处和许可各不相同），导出的只有脚本和说明
-for s in character-sheet cinematic-director minimax-tts virgin-vs-chad; do
+for s in character-sheet cinematic-director minimax-tts virgin-vs-chad yuyan-sheji eagle-assets; do
   src=$(ss_skill $s) || exit 1
   rsync -a --delete $EX "$src/" "$R/skills/$s/"
 done
