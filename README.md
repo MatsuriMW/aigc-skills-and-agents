@@ -56,6 +56,17 @@ character-sheet 角色设定板 ── 三视图 + 不夸张的表情板 + 细�
 
 有项目目录时，产出默认存进 `character-sheets/<角色>/`（prompt、参考图、生成结果）；没有就直接在对话里给。
 
+### 案例
+
+四张按这份设定板 prompt 生成的图：4:3 横版，一张里放齐三视图（带身高刻度）、剪影、8 种表情、5 种微表情、头部结构、姿态、一张情绪特写、服装细节和手部动作，左上角是角色卡（年龄、性格关键词、一句主题）和配色。可以留意表情那一排：怕、惊讶、紧张都只动了眼睛和嘴角，没有变成夸张的表演脸。
+
+| | |
+|---|---|
+| ![LAO JIN 的设定板：夜市古着摊主，48 岁，深蓝西装外套配橄榄绿裤，戴细框眼镜](skills/character-sheet/examples/lao-jin.jpg) | ![GU YAN 的设定板：独立书店店主，30 岁，格纹灯芯绒外套和酒红围巾](skills/character-sheet/examples/gu-yan.jpg) |
+| **LAO JIN** · 夜市古着摊主，48 岁 · *Dignity doesn't need a throne.* | **GU YAN** · 独立书店店主，30 岁 · *Warmth lives in the layers.* |
+| ![SU MING 的设定板：独立画廊策展人，28 岁，格纹西装、条纹领带配浅色牛仔裤和乐福鞋](skills/character-sheet/examples/su-ming.jpg) | ![YAN SHEN 的设定板：自由调查摄影师，25 岁，黑色皮夹克和切尔西靴](skills/character-sheet/examples/yan-shen.jpg) |
+| **SU MING** · 独立画廊策展人，28 岁 · *Effortless is a practiced art.* | **YAN SHEN** · 自由调查摄影师，25 岁 · *Composure is his armor.* |
+
 可以配合的其他 skill：上游分镜 / 导演用本仓库的 [cinematic-director](skills/cinematic-director)，下游按具体模型写 prompt 用 [visual-skills](https://github.com/smixs/visual-skills)。
 
 ## 古典式配图
