@@ -6,7 +6,7 @@ AI 生成内容（生图 / 生视频 / 角色设定）相关任务的工作目�
 
 - `.claude/skills/` — 本工作区的 5 个 skill。这里是软链，正本在 skillshare 源的 `aigc/` 分组（`~/.config/skillshare/skills/aigc/<名字>`），由 skillshare 分发到 Claude / Codex / Pi / WorkBuddy，所以在任何目录都能用；改文件走哪条路径都一样。同一分组里还有 gudianshi-skill、seedance 三件套、huashu-art-motion、zine 海报四件套、mg-styles-15 和 vibe-motion 的 16 个 motion 动画 skill
   - `character-sheet/` — 角色设定板（Character Sheet）prompt 制作
-  - `juese-sheji/` — 角色设计（原 fuhuadao）：具体化（入口：把「轻佻的男性」这类模糊感觉拆成维度、写成名词和动作，`references/articulate-rules.md` + `references/dimensions/` 维度词库，分一般 / 深入两档，产出 `shorts/<项目>/人物精细描述-<角色>-v<N>.md`，示例 `examples/轻佻的男性.md`、`examples/温柔的大块头.md`；刚柔光谱（男性气质 ↔ 女性气质）在 `references/soft-hard-axis.md`，分底色 / 推向 / 习惯三层，模式 E 第 3 步、群像第 8 轴、检验、漂移清单都引用它；风格库 `references/styles/`：47 个服装风格由 `scripts/sync-styles.py` 从主库 `审美/风格/` 生成，主库是正本，另有手写的「人群与身份」；出图后按 `references/drift-checklist.md` 审，各模型实测记进 `references/model-notes.md`，评测流程在 `evals/`）、人物原型（`references/archetypes/` 里 122 个影视经典人物原型的图鉴，按「原型 + 具体 + 反转」本土化）、检验（时代考据、性格表达、记忆点、慎用套路，出评分和改法）、创意风暴（发散几个造型方向再收敛）、设计落地（Look / 妆发 / 道具 / 连戏表 + 生图锁定段）。产出存 `shorts/<项目>/人物原型-v<N>.md`、`服化道*-v<N>.md`
+  - `juese-sheji/` — 角色设计（原 fuhuadao）：具体化（入口：把「轻佻的男性」这类模糊感觉拆成维度、写成名词和动作，`references/articulate-rules.md` + `references/dimensions/` 维度词库，分一般 / 深入两档，产出 `shorts/<项目>/人物精细描述-<角色>-v<N>.md`，示例 `examples/轻佻的男性.md`、`examples/温柔的大块头.md`；刚柔光谱（男性气质 ↔ 女性气质）在 `references/soft-hard-axis.md`，分底色 / 推向 / 习惯三层，模式 E 第 3 步、群像第 8 轴、检验、漂移清单都引用它；风格库 `references/styles/`：47 个服装风格随 skill 预制（别人装好就能用），内容来自主库 `审美/风格/`，另有手写的「人群与身份」；出图后按 `references/drift-checklist.md` 审，各模型实测记进 `references/model-notes.md`，评测流程在 `evals/`）、人物原型（`references/archetypes/` 里 122 个影视经典人物原型的图鉴，按「原型 + 具体 + 反转」本土化）、检验（时代考据、性格表达、记忆点、慎用套路，出评分和改法）、创意风暴（发散几个造型方向再收敛）、设计落地（Look / 妆发 / 道具 / 连戏表 + 生图锁定段）。产出存 `shorts/<项目>/人物原型-v<N>.md`、`服化道*-v<N>.md`
   - `cinematic-director/` — 分镜 / 导演流程（第三方 wuwangzhang1216/DirectorSKILL，MIT）。本地加了 `director_styles/21_johnnie_to.md` 和 `references/visual-vocabulary-zh.md`，更新上游时注意保留
   - `video/`、`image/` — 按模型写生视频 / 生图提示词（第三方 smixs/visual-skills，CC-BY-4.0）
   - 各第三方 skill 的来源和 commit 记在各自目录的 `.source`
@@ -19,11 +19,13 @@ AI 生成内容（生图 / 生视频 / 角色设定）相关任务的工作目�
 - `character-sheets/` — 每个角色一个子目录：`prompt.md`、`reference.*`、生成结果
 - `docs/specs/` — skill 的设计文档
 - `shorts/` — 短片项目，每部一个子目录：`README.md`（要做什么 + 资料索引）、`资料/`（原始素材副本）、分镜稿 / 场景稿按版本号迭代
+- `evals/` — skill 评测出的图，按 `<skill>/<日期>-<模型>/` 放（图、`prompts.json`、`log.json`）；评测记录写在 skill 自己的 `evals/runs/`，那边不发布
 
 ## 约定
 
+- 片子有台词时：语言设计（yuyan-sheji）在剧本阶段就进来，定稿、进分镜之前先走它的模式 R 拷打一遍（中英日、古今都适用），定稿台词和拍数再交给分镜。
 - 角色设计（juese-sheji）时：用户本人有服装分类（绅装 / 工装 / 国潮，美式复古 / 阿美咔叽），可以借这套词汇，但角色不是用户本人，按角色逻辑来。
-- 风格库同步：用户在主库改了风格页后，在 `.claude/skills/juese-sheji` 下跑 `python3 scripts/sync-styles.py ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/马自立/审美/风格`。
+- 风格库同步：用户在主库改了风格页后，跑 `python3 ~/claude/aigc/exports/juese-sheji-styles/sync-styles.py ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/马自立/审美/风格`（脚本只在本机，不随 skill 发布）。
 - juese-sheji 有独立的公开仓库（交付给别人用的版本），本地这份是正本，改完在仓库目录跑 `./sync.sh`，见下面「仓库」。
 - 风格偏好：做视频优先用 mg-styles-15 的拼贴剪贴（`06-collage`），其次形变（`08-morph`）；配图优先用 gathered-scenes-zine 那组海报 skill；motion 动画效果从 vibe-motion 那批里找。
 - 拼贴用的通用素材在 Eagle 库「思想的记录」的「拼贴素材」文件夹：纸张与票据、手与指示、人物与雕像、动植物、天体与地图、器物与机械、纸纹与叠加纹理。馆藏图都是公有领域（CC0），每张的注释里记了作者、年代、馆藏和页面。找图、取图、补新素材都用 `eagle-assets` skill（脚本 `eagle_assets.py`：`list` 查、`export` 把原图拷进项目并记 `CREDITS.md`）。只收 CC0 或公有领域的。

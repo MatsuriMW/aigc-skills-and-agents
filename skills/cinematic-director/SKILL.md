@@ -156,6 +156,8 @@ Fix the deliverable, duration, aspect, tool, genre, and constraints. State assum
 
 ### 2. Script and subtext breakdown
 
+If the script has dialogue and the `yuyan-sheji` skill is available, offer to run its script-stage pass (mode R) before locking the script: changing lines after shots are timed costs far more.
+
 Identify, in this order:
 
 - **Literal event** — what happens on the surface.
