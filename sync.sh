@@ -1,7 +1,7 @@
 #!/bin/zsh
 # AIGC 相关的 skill 和工作区配置的展示库。正本都在 skillshare 源（~/.config/skillshare/skills），这里只单向导出。
 # 准入标准：只放我自己做的或改过的；原样下载的 skill 不进，README 里给上游链接。
-# 单独建了仓库的 skill（角色设计 juese-sheji → ai-character-design-skill）不在这里留副本。
+# 单独建了仓库的 skill（角色设计 juese-sheji → ai-character-design-skill，语言设计 yuyan-sheji → ai-character-voice-skill）不在这里留副本。
 # 用法：./sync.sh "改了什么"
 set -e
 R="${0:A:h}"
@@ -16,9 +16,9 @@ ss_skill() {
 }
 
 mkdir -p "$R/skills"
-# character-sheet、peiyin、virgin-vs-chad、yuyan-sheji、eagle-assets 自制；eagle-assets 只导出脚本和说明，素材图在我的 Eagle 库里，不进仓库；cinematic-director 改自 wuwangzhang1216/DirectorSKILL（MIT）
+# character-sheet、peiyin、virgin-vs-chad、eagle-assets 自制；语言设计 yuyan-sheji 在独立仓库 ai-character-voice-skill；eagle-assets 只导出脚本和说明，素材图在我的 Eagle 库里，不进仓库；cinematic-director 改自 wuwangzhang1216/DirectorSKILL（MIT）
 # virgin-vs-chad 的角色图不在 skill 目录里（出处和许可各不相同），导出的只有脚本和说明
-for s in cinematic-director peiyin virgin-vs-chad yuyan-sheji eagle-assets; do
+for s in cinematic-director peiyin virgin-vs-chad eagle-assets; do
   src=$(ss_skill $s) || exit 1
   rsync -a --delete $EX "$src/" "$R/skills/$s/"
 done
